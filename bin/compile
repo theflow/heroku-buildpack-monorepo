@@ -4,7 +4,7 @@
 shopt -s dotglob
 
 indent() {
-    sed -u 's/^/      /'
+    sed -u 's/^/       /'
 }
 
 BUILD_DIR="$1"
@@ -19,6 +19,8 @@ fi
 APP_BASE="$(cat "${ENV_DIR}/APP_BASE")"
 
 (
+    mv "${BUILD_DIR}/shared" "${BUILD_DIR}/${APP_BASE}/shared" &&
+    ln -nfs "../shared/lib" "${BUILD_DIR}/${APP_BASE}/app/shared" &&
     mv "${BUILD_DIR}/${APP_BASE}" "${STAGE}" &&
     rm -rf "${BUILD_DIR}"/* &&
     mv "${STAGE}/$(basename "$APP_BASE")"/* "${BUILD_DIR}"
@@ -30,4 +32,3 @@ if [ $? -ne 0 ]; then
 fi
 
 echo "Copied ${APP_BASE} to root of app successfully" | indent
-
